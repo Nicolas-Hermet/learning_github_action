@@ -1,13 +1,12 @@
-name: "My Awesome Workflow"
+name: "My-Awesome-Workflow"
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
-    types: [ opened, reopened, ready_for_review ]
+    branches: [ "main" ]
+    types: [ synchronize ]
 jobs:
   rspec-build:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
@@ -23,8 +22,6 @@ jobs:
         gem install bundler
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
-        bundle exec rails db:create RAILS_ENV=test
-        bundle exec rails db:migrate RAILS_ENV=test
       env:
         DATABASE_URL: 'postgres://test:password@localhost/application_test'
     - name: Run specs
