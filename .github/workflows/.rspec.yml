@@ -6,5 +6,8 @@ on:
 jobs:
   fais-tourner-les-specs:
     uses: "./.github/workflows/.reusable.yml"
+    steps:
     - name: Run specs
       run: bundle exec rspec --fail-fast
+      env:
+        DATABASE_URL: 'postgres://test:password@localhost/application_test'
