@@ -1,13 +1,17 @@
 name: "La base gros"
+# on:
+  # workflow_call:
+  #   inputs:
+  #     config-path:
+  #       required: true
+  #       type: string
+  #   secrets:
+  #     envPAT:
+  #       required: true
 on:
-  workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      envPAT:
-        required: true
+  pull_request:
+    branches: [ "main" ]
+    types: [ synchronize ]
 jobs:
   ruby-set-up:
     runs-on: ubuntu-latest
