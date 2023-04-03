@@ -5,7 +5,7 @@ on:
     types: [ synchronize ]
 jobs:
   fais-tourner-les-specs:
-    uses: Nicolas-Hermet/learning_github_action/.github/workflows/reusable-workflow.yml@main
+    uses: Nicolas-Hermet/learning_github_action/.github/workflows/reusable.yml
     steps:
     - name: Run specs
       run: bundle exec rspec --fail-fast
