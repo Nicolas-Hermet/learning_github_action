@@ -4,26 +4,9 @@ on:
     branches: [ "main" ]
     types: [ synchronize ]
 jobs:
-  rspec-build:
-    runs-on: ubuntu-latest
-    if: ${{ !github.event.pull_request.draft }}
+  fais-tourner-les-specs:
+    uses: Nicolas-Hermet/learning_github_action/.github/workflows/reusable-workflow.yml@main
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Set up PostgreSQL
-      uses: Harmon758/postgresql-action@v1.0.0
-      with:
-        postgresql user: test
-        postgresql password: password
-    - name: Build app
-      run: |
-        gem install bundler
-        bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3
-      env:
-        DATABASE_URL: 'postgres://test:password@localhost/application_test'
     - name: Run specs
       run: bundle exec rspec --fail-fast
       env:
