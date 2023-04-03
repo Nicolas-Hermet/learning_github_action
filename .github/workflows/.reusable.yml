@@ -9,7 +9,7 @@ on:
       envPAT:
         required: true
 jobs:
-  rspec-build:
+  ruby-set-up:
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
