@@ -1,4 +1,4 @@
-require_relative "./app"
+require_relative "../app"
 
 RSpec.describe Toto do
   it "output Toto to stdout" do
