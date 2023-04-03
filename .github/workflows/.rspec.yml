@@ -1,4 +1,4 @@
-name: "My Awesome Workflow"
+name: "My-Awesome-Workflow"
 on:
   pull_request:
     branches: [ "main" ]
