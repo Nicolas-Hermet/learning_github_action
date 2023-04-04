@@ -25,21 +25,48 @@ jobs:
         bundle install --jobs 4 --retry 3
       env:
         DATABASE_URL: 'postgres://test:password@localhost/application_test'
-  toto:
-    name: Toto
-    needs: ruby-set-up
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run specs
-        run: bundle exec rspec --fail-fast
 
-  tata:
-    name: Tata
-    needs: toto
-    runs-on: ubuntu-latest
 
-    steps:
-    - name: Simple echo
+    - name: Get file changes
+      id: get_file_changes
+      uses: trilom/file-changes-action@v1.2.4
+      with:
+        output: ' '
+    - name: Echo file changes
       run: |
-          echo "Completed Toto"
+        echo Changed files: ${{ steps.get_file_changes.outputs.files }}
+
+    - name: Rubocop
+      id: rubocop_run
+      uses: wearerequired/lint-action@v2.1.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        rubocop: true
+        auto_fix: false
+        rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
+        rubocop_command_prefix: bundle exec
+
+
+    - name: RSpec suite
+      id: rspec-id
+      if: ${{ steps.rubocop_run.output.conclusion }} == "success"
+      run: bundle exec rspec --fail-fast
+
+  # toto:
+  #   name: Toto
+  #   needs: ruby-set-up
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Run specs
+  #       run: bundle exec rspec --fail-fast
+
+  # tata:
+  #   name: Tata
+  #   needs: toto
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Simple echo
+  #     run: |
+  #         echo "Completed Toto"
