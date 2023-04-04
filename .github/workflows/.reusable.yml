@@ -1,13 +1,4 @@
 name: "La base gros"
-# on:
-  # workflow_call:
-  #   inputs:
-  #     config-path:
-  #       required: true
-  #       type: string
-  #   secrets:
-  #     envPAT:
-  #       required: true
 on:
   pull_request:
     branches: [ "main" ]
