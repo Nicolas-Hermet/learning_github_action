@@ -5,7 +5,7 @@ on:
     types: [ synchronize ]
 jobs:
   it-has-one-job:
-    name: ${{ env.current_step }}
+    name: ${{ github.env.current_step }}
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
