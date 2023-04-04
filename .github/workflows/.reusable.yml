@@ -5,7 +5,6 @@ on:
     types: [ synchronize ]
 jobs:
   it-has-one-job:
-    name: ${{ github.env.current_step }}
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
@@ -13,16 +12,12 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      env:
-        current_step: "Install Ruby"
 
     - name: Set up PostgreSQL
       uses: Harmon758/postgresql-action@v1.0.0
       with:
         postgresql user: test
         postgresql password: password
-      env:
-        current_step: "Install Postgres"
 
     - name: Install gems
       run: |
@@ -31,7 +26,6 @@ jobs:
         bundle install --jobs 4 --retry 3
       env:
         DATABASE_URL: 'postgres://test:password@localhost/application_test'
-        current_step: "Install gems"
 
     - name: Get file changes
       id: get_file_changes
@@ -41,25 +35,12 @@ jobs:
     - name: Echo file changes
       run: |
         echo Changed files: ${{ steps.get_file_changes.outputs.files }}
-      env:
-        current_step: "Get files changed names"
 
     - name: Run Rubocop
       id: rubocop_run
       run: rubocop --force-exclusion ${{ steps.get_file_changes.outputs.files}} -F
-      env:
-        current_step: "Run rubocop"
-      # uses: wearerequired/lint-action@v2.1.0
-      # with:
-      #   github_token: ${{ secrets.GITHUB_TOKEN }}
-      #   rubocop: true
-      #   auto_fix: false
-      #   rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
-      #   rubocop_command_prefix: bundle exec
 
     - name: Run whole RSpec suite
       id: rspec-id
       if: ${{ steps.rubocop_run.outputs.conclusion }} == "success"
       run: bundle exec rspec --fail-fast
-      env:
-        current_step: "Run rspec"
