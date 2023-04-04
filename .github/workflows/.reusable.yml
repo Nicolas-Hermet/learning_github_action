@@ -4,8 +4,8 @@ on:
     branches: [ "main" ]
     types: [ synchronize ]
 jobs:
-  ruby-set-up:
-    name: ${{ github.job }}
+  it-has-one-job:
+    name: ${{ github.steps }}
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
