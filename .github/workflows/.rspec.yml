@@ -1,12 +1,10 @@
-name: "My-Awesome-Workflow"
-on: [push]
-jobs:
-  fais-tourner-les-specs:
-    runs-on: ubuntu-latest
-      needs: [ruby-set-up]
-      steps:
-        - uses: actions/checkout@v3
-        - name: Run specs
-        run: bundle exec rspec --fail-fast
-        env:
-          DATABASE_URL: 'postgres://test:password@localhost/application_test'
+# name: "My-Awesome-Workflow"
+# on: [push]
+# jobs:
+#   fais-tourner-les-specs:
+#     runs-on: ubuntu-latest
+#       needs: [ruby-set-up]
+#       steps:
+#         - uses: actions/checkout@v3
+#         - name: Run specs
+#         - run: bundle exec rspec --fail-fast
