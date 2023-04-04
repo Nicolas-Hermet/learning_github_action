@@ -1,15 +1,11 @@
 name: "La base gros"
 on:
-  workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      envPAT:
-        required: true
+  pull_request:
+    branches: [ "main" ]
+    types: [ synchronize ]
 jobs:
   ruby-set-up:
+    name: Ruby set up
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
@@ -17,15 +13,61 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
     - name: Set up PostgreSQL
       uses: Harmon758/postgresql-action@v1.0.0
       with:
         postgresql user: test
         postgresql password: password
-    - name: Build app
+
+    - name: Install gems
       run: |
         gem install bundler
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
       env:
         DATABASE_URL: 'postgres://test:password@localhost/application_test'
+
+    - name: Get file changes
+      id: get_file_changes
+      uses: trilom/file-changes-action@v1.2.4
+      with:
+        output: ' '
+    - name: Echo file changes
+      run: |
+        echo Changed files: ${{ steps.get_file_changes.outputs.files }}
+
+    - name: Rubocop
+      id: rubocop_run
+      uses: wearerequired/lint-action@v2.1.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        rubocop: true
+        auto_fix: false
+        rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
+        rubocop_command_prefix: bundle exec
+
+
+    - name: RSpec suite
+      id: rspec-id
+      if: ${{ steps.rubocop_run.outputs.conclusion }} == "success"
+      run: bundle exec rspec --fail-fast
+
+  # toto:
+  #   name: Toto
+  #   needs: ruby-set-up
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Run specs
+  #       run: bundle exec rspec --fail-fast
+
+  # tata:
+  #   name: Tata
+  #   needs: toto
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Simple echo
+  #     run: |
+  #         echo "Completed Toto"
