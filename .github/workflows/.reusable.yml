@@ -1,11 +1,11 @@
-name: "La base gros"
+name: "Le CI de la mort"
 on:
   pull_request:
     branches: [ "main" ]
     types: [ synchronize ]
 jobs:
   ruby-set-up:
-    name: Ruby set up
+    name: Set up Ruby environment
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     steps:
@@ -37,7 +37,7 @@ jobs:
       run: |
         echo Changed files: ${{ steps.get_file_changes.outputs.files }}
 
-    - name: Rubocop
+    - name: Run Rubocop
       id: rubocop_run
       uses: wearerequired/lint-action@v2.1.0
       with:
@@ -47,27 +47,7 @@ jobs:
         rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
         rubocop_command_prefix: bundle exec
 
-
-    - name: RSpec suite
+    - name: Run whole RSpec suite
       id: rspec-id
       if: ${{ steps.rubocop_run.outputs.conclusion }} == "success"
       run: bundle exec rspec --fail-fast
-
-  # toto:
-  #   name: Toto
-  #   needs: ruby-set-up
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Run specs
-  #       run: bundle exec rspec --fail-fast
-
-  # tata:
-  #   name: Tata
-  #   needs: toto
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Simple echo
-  #     run: |
-  #         echo "Completed Toto"
