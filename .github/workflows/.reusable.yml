@@ -43,8 +43,8 @@ jobs:
       - name: Run specs
       - run: bundle exec rspec --fail-fast
 
-  tata:
-    name: Tata
-    need: toto
-    run: |
-        echo "Completed Toto"
+  # tata:
+  #   name: Tata
+  #   need: toto
+  #   run: |
+  #       echo "Completed Toto"
