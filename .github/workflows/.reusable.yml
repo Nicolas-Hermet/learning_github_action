@@ -39,13 +39,14 @@ jobs:
 
     - name: Run Rubocop
       id: rubocop_run
-      uses: wearerequired/lint-action@v2.1.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        rubocop: true
-        auto_fix: false
-        rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
-        rubocop_command_prefix: bundle exec
+      run: rubocop --force-exclusion ${{ steps.get_file_changes.outputs.files}} -F
+      # uses: wearerequired/lint-action@v2.1.0
+      # with:
+      #   github_token: ${{ secrets.GITHUB_TOKEN }}
+      #   rubocop: true
+      #   auto_fix: false
+      #   rubocop_args: --force-exclusion ${{ steps.get_file_changes.outputs.files}}
+      #   rubocop_command_prefix: bundle exec
 
     - name: Run whole RSpec suite
       id: rspec-id
