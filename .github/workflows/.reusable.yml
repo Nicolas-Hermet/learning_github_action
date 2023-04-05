@@ -38,7 +38,7 @@ jobs:
 
     - name: Run Rubocop
       id: rubocop_run
-      run: rubocop --force-exclusion ${{ steps.get_file_changes.outputs.files }} -F
+      run: rubocop --force-exclusion ${{ steps.get_file_changes.outputs.files }}
 
     - name: Run whole RSpec suite
       id: rspec-id
